@@ -1,0 +1,1 @@
+# blazor-binding-single-object
