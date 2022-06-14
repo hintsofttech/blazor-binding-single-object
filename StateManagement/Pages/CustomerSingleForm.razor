@@ -1,0 +1,41 @@
+﻿@page "/singleCustomerForm"
+@inject Customer customer
+@inject IJSRuntime js
+
+<h1>Customer Entry Form</h1>
+
+<input id="focusedInput" @bind="@customer.LastFocusedId" hidden/>
+
+<input id="txtId" @bind="@customer.Id" @onfocus='()=>LastFocused("txtId")'/>
+<input id="txtName" @bind="@customer.Name" @onfocus='()=>LastFocused("txtName")'/>
+<input id="txtAddress" @bind="@customer.Address" @onfocus='()=>LastFocused("txtAddress")'/>
+
+
+
+@code 
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if(customer.LastFocusedId==null)
+                await js.InvokeVoidAsync("Focus", "txtId");
+            else
+                await js.InvokeVoidAsync("Focus", customer.LastFocusedId);
+        }
+    }
+
+    void LastFocused(string elementId)
+    {
+        customer.LastFocusedId = elementId;
+    }
+    
+}
+<script suppress-error="BL9992">
+function Focus(elementId) 
+{
+    setTimeout(function(){
+        $("#"+elementId).focus();
+    },100);
+}
+</script>
